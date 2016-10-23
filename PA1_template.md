@@ -1,16 +1,17 @@
 # Reproducible Research: Project Assignment 1
 
 ## Loading and preprocessing the data
-```{r}
+
+```r
 activity <- read.csv("activity.csv")
 activity$date <- as.Date(activity$date)
 
 activity_new<- na.omit(activity)
-
 ```
 
 ## What is mean total number of steps taken per day?
-```{r}
+
+```r
 agg  <-aggregate(activity_new$steps,list(activity_new$date),sum,na.rm=TRUE)
 colnames(agg)<-c("date","steps")
 mean <- mean(agg$steps)
@@ -19,19 +20,32 @@ plot(agg$date,agg$steps, type="h", main="Daily Steps", xlab="Date", ylab="Steps 
 abline(h=mean, col="red", lwd=2)
 ```
 
+![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2-1.png)
+
 Mean number of steps taken per day = 
 
-```{r}
+
+```r
 mean(agg$steps)
 ```
 
+```
+## [1] 10766.19
+```
+
 Median number of steps taken per day =
-```{r}
+
+```r
 median(agg$steps)
 ```
 
+```
+## [1] 10765
+```
+
 ## What is the average daily activity pattern?
-```{r}
+
+```r
 agg2  <-aggregate(activity_new$steps,list(activity_new$interval),mean,na.rm=TRUE)
 colnames(agg2)<-c("interval","steps")
 mean2 <- mean(agg2$steps)
@@ -40,29 +54,47 @@ plot(agg2$interval,agg2$steps, type="l", main="Steps Per Interval", xlab="Interv
 abline(h=mean2, col="red", lwd=2)
 ```
 
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png)
+
 On average across all the days in the dataset, the 5-minute interval contains
 the maximum number of steps?
 
 Interval with max steps=
-```{r}
+
+```r
 max(agg2$steps)
 ```
+
+```
+## [1] 206.1698
+```
 Maximum interval with max steps =
-```{r}
+
+```r
 agg2$interval[which(agg2$steps == max(agg2$steps))]
+```
+
+```
+## [1] 835
 ```
 
 ## Inputing missing values
 
 The number of missing values=
-```{r}
+
+```r
 sum(is.na(activity$steps))
+```
+
+```
+## [1] 2304
 ```
 
 All of the missing values are filled in with mean value for that 5-minute
 interval.
 
-```{r}
+
+```r
 # Replace each missing value with the mean value of its 5-minute interval
 
 activity_replace <- activity
@@ -88,7 +120,8 @@ while (i < nrow(activity)+1){
 ```
 Now, using the filled data set, let's make a histogram of the total number of steps taken each day and calculate the mean and median total number of steps.
 
-```{r}
+
+```r
 agg3  <-aggregate(activity_replace$steps,list(activity_replace$date),sum,na.rm=TRUE)
 colnames(agg3)<-c("date","steps")
 mean3 <- mean(agg3$steps)
@@ -97,14 +130,26 @@ plot(agg3$date,agg3$steps, type="h", main="Daily Steps", xlab="Date", ylab="Step
 abline(h=mean3, col="red", lwd=2)
 ```
 
+![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10-1.png)
+
 Mean number of steps taken per day = 
-```{r}
+
+```r
 mean(agg3$steps)
 ```
 
+```
+## [1] 10766.19
+```
+
 Median number of steps taken per day =
-```{r}
+
+```r
 median(agg3$steps)
+```
+
+```
+## [1] 10766.19
 ```
 
 Mean and median values are higher after inputing missing data. The reason is
@@ -118,7 +163,8 @@ from the histogram of total number of steps taken each day.
 First, let's find the day of the week for each measurement in the dataset. In
 this part, we use the dataset with the filled-in values.
 
-```{r}
+
+```r
 activity_replace[,"day"] <- weekdays(activity$date)
 
 activity_day <- activity_replace
@@ -150,17 +196,15 @@ mean4 <- mean(agg4$steps)
 agg5  <-aggregate(activity_weekend$steps,list(activity_weekend$interval),mean,na.rm=TRUE)
 colnames(agg5)<-c("interval","steps")
 mean5<- mean(agg5$steps)
-
 ```
 
 Now, let's make a panel plot containing plots of average number of steps taken
 on weekdays and weekends.
-```{r}
 
+```r
 par(mfrow=c(2,1))
 plot(agg4$interval,agg4$steps, type="l", main="Steps Per Interval(Weekday)", xlab="Interval", ylab="Steps", col="blue", lwd=4)
 plot(agg5$interval,agg5$steps, type="l", main="Steps Per Interval(Weekend)", xlab="Interval", ylab="Steps", col="blue", lwd=4)
-
-
-
 ```
+
+![plot of chunk unnamed-chunk-14](figure/unnamed-chunk-14-1.png)
